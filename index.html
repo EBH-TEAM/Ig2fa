@@ -341,6 +341,38 @@
       overflow-y: auto;
     }
 
+    /* নতুন পাসওয়ার্ড সেভ বাটন - লম্বা, চিকন, পুরো প্রস্থ জুড়ে */
+    .global-password-save-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+      border: none;
+      color: #1a2a0a;
+      font-weight: 800;
+      padding: 12px 16px;
+      border-radius: 40px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 12px 0 8px 0;
+      box-shadow: 0 5px 0 #b26500;
+      transition: all 0.05s linear;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .global-password-save-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #b26500;
+    }
+
+    /* ইনপুট বক্স থেকে পুরনো সেভ বাটন রিমুভ করে দেওয়া হয়েছে */
+    .input-box-footer {
+      display: none;
+    }
+
     /* অতিরিক্ত লম্বা ইনপুট বক্স - এক লাইন সাবমিটের জন্য */
     .extra-input-container {
       margin-top: 12px;
@@ -490,20 +522,6 @@
       pointer-events: none;
     }
 
-    .time-remaining {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--muted);
-      padding: 6px 18px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 40px;
-    }
-
-    .time-highlight {
-      color: var(--secondary);
-      font-weight: 700;
-    }
-
     .output-section {
       background: var(--panel);
       border-radius: 20px;
@@ -593,6 +611,9 @@
     <div class="input-box"><div class="box-header" id="header3">2FA KEY</div><textarea class="box-textarea" id="input3" placeholder="One per line"></textarea></div>
   </div>
 
+  <!-- নতুন লম্বা চিকন বাটন - ইনপুট বক্সের নিচে পুরো প্রস্থ জুড়ে -->
+  <button class="global-password-save-btn" id="savePasswordBtn">🔐 PASSWORD SAFE</button>
+
   <!-- অতিরিক্ত লম্বা ইনপুট বক্স - এক লাইন সাবমিটের জন্য (শুধু IG COOKIES অপশনে দেখাবে) -->
   <div class="extra-input-container" id="extraInputContainer">
     <div class="extra-input-box">
@@ -607,12 +628,11 @@
   </div>
 
   <div class="date-info">Today: <span class="current-date" id="currentDate"></span> - Must include in password</div>
-  <div class="submit-section"><div class="submit-notice" id="timeNotice">Working Hours: 24/7</div><div id="timeRemaining" class="time-remaining"></div><button class="submit-btn" id="submitBtn">SUBMIT</button></div>
+  <div class="submit-section"><div class="submit-notice" id="timeNotice">Working Hours: 24/7</div><button class="submit-btn" id="submitBtn">SUBMIT</button></div>
   <div class="output-section"><div class="output-text">EARNING BY HABIB</div></div>
 </div>
 
 <!-- Popups -->
-<div class="popup-overlay" id="restrictedPopup"><div class="popup-content"><div class="popup-header warning">⏰ CLOSED</div><div class="popup-message">🔴 9PM - 12AM</div><div class="popup-buttons"><button class="popup-btn confirm" id="closeRestrictedPopup">OK</button></div></div></div>
 <div class="popup-overlay" id="systemOffPopup"><div class="popup-content"><div class="popup-header warning">⚠️ SYSTEM OFFLINE</div><div class="popup-message" id="systemOffPopupMessage"></div><div class="popup-buttons"><button class="popup-btn confirm" id="closeSystemOffPopup">OK</button></div></div></div>
 <div class="popup-overlay" id="optionOffPopup"><div class="popup-content"><div class="popup-header warning" id="optionOffTitle">⚠️ UNAVAILABLE</div><div class="popup-message" id="optionOffMessage"></div><div class="popup-buttons"><button class="popup-btn confirm" id="closeOptionOffPopup">OK</button></div></div></div>
 <div class="popup-overlay" id="noOptionSelectedPopup"><div class="popup-content"><div class="popup-header warning">⚠️ NO OPTION SELECTED</div><div class="popup-message">Please select an option before submitting.</div><div class="popup-buttons"><button class="popup-btn confirm" id="closeNoOptionPopup">OK</button></div></div></div>
@@ -641,8 +661,9 @@
   const submitBtn = document.getElementById('submitBtn'), currentDateElement = document.getElementById('currentDate');
   const optionInstagram = document.getElementById('optionInstagram'), optionFacebook2FA = document.getElementById('optionFacebook2FA'), optionFacebookCookie = document.getElementById('optionFacebookCookie'), optionIgCookies = document.getElementById('optionIgCookies');
   const systemStatusDot = document.getElementById('systemStatusDot'), systemStatusText = document.getElementById('systemStatusText'), tickerContent = document.getElementById('tickerContent'), systemOffNotice = document.getElementById('systemOffNotice'), systemOffMessage = document.getElementById('systemOffMessage');
-  const restrictedPopup = document.getElementById('restrictedPopup'), systemOffPopup = document.getElementById('systemOffPopup'), systemOffPopupMessage = document.getElementById('systemOffPopupMessage'), optionOffPopup = document.getElementById('optionOffPopup'), optionOffMessage = document.getElementById('optionOffMessage'), optionOffTitle = document.getElementById('optionOffTitle'), noOptionSelectedPopup = document.getElementById('noOptionSelectedPopup'), popupOverlay = document.getElementById('popupOverlay'), popupTitle = document.getElementById('popupTitle'), popupMessage = document.getElementById('popupMessage'), duplicatePopup = document.getElementById('duplicatePopup'), duplicatePopupMessage = document.getElementById('duplicatePopupMessage');
-  const closeRestricted = document.getElementById('closeRestrictedPopup'), closeSystemOff = document.getElementById('closeSystemOffPopup'), closeOptionOff = document.getElementById('closeOptionOffPopup'), closeNoOption = document.getElementById('closeNoOptionPopup'), popupConfirm = document.getElementById('popupConfirm'), duplicateConfirm = document.getElementById('duplicateConfirm'), duplicateCancel = document.getElementById('duplicateCancel');
+  const systemOffPopup = document.getElementById('systemOffPopup'), systemOffPopupMessage = document.getElementById('systemOffPopupMessage'), optionOffPopup = document.getElementById('optionOffPopup'), optionOffMessage = document.getElementById('optionOffMessage'), optionOffTitle = document.getElementById('optionOffTitle'), noOptionSelectedPopup = document.getElementById('noOptionSelectedPopup'), popupOverlay = document.getElementById('popupOverlay'), popupTitle = document.getElementById('popupTitle'), popupMessage = document.getElementById('popupMessage'), duplicatePopup = document.getElementById('duplicatePopup'), duplicatePopupMessage = document.getElementById('duplicatePopupMessage');
+  const closeSystemOff = document.getElementById('closeSystemOffPopup'), closeOptionOff = document.getElementById('closeOptionOffPopup'), closeNoOption = document.getElementById('closeNoOptionPopup'), popupConfirm = document.getElementById('popupConfirm'), duplicateConfirm = document.getElementById('duplicateConfirm'), duplicateCancel = document.getElementById('duplicateCancel');
+  const savePasswordBtn = document.getElementById('savePasswordBtn');
 
   let selectedOption = null;
   let systemStatus = true;
@@ -652,6 +673,42 @@
   let pendingSubmission = { ids: [], passwords: [], codes: [], uniqueIndices: [] };
   const TODAY_DATE = new Date().getDate().toString();
   if (currentDateElement) currentDateElement.textContent = TODAY_DATE;
+
+  // পাসওয়ার্ড সেভ ফাংশনালিটি - localStorage ব্যবহার করে ডিভাইস ভিত্তিক পার্মানেন্ট স্টোরেজ
+  const STORAGE_KEY = 'ebh_saved_password';
+  
+  function loadSavedPassword() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved !== null && saved !== undefined) {
+      return saved;
+    }
+    return "";
+  }
+  
+  function savePasswordToStorage(password) {
+    localStorage.setItem(STORAGE_KEY, password);
+  }
+  
+  // লোড হওয়ার সময় সেভ করা পাসওয়ার্ড রিস্টোর করা
+  let savedPasswordValue = loadSavedPassword();
+  
+  function updatePasswordFieldFromSave() {
+    if(input2 && savedPasswordValue !== "") {
+      input2.value = savedPasswordValue;
+    }
+  }
+  
+  // সেভ বাটনের ইভেন্ট - নতুন লম্বা বাটনের জন্য
+  savePasswordBtn.addEventListener('click', () => {
+    if(input2) {
+      const currentPassword = input2.value;
+      savedPasswordValue = currentPassword;
+      savePasswordToStorage(currentPassword);
+      showCustomPopup('success', '🔐 SUCCESS', 'Password saved permanently on this device!');
+    } else {
+      showCustomPopup('error', 'ERROR', 'Password field not found');
+    }
+  });
 
   function loadAllData() { loadSystemStatus(); loadOptionStatus(); }
   function loadSystemStatus() {
@@ -687,14 +744,10 @@
   // IG COOKIES অপশন সিলেক্ট করলে বিশেষ UI পরিবর্তন
   function toggleExtraInputForIgCookies(isIgCookiesSelected) {
     if(isIgCookiesSelected) {
-      // তিনটি বক্স ছোট করা
       mainInputContainer.classList.add('small-boxes');
-      // অতিরিক্ত বক্স দেখানো
       extraInputContainer.classList.add('show');
     } else {
-      // তিনটি বক্স স্বাভাবিক করা
       mainInputContainer.classList.remove('small-boxes');
-      // অতিরিক্ত বক্স লুকানো
       extraInputContainer.classList.remove('show');
     }
   }
@@ -709,7 +762,6 @@
     input2.placeholder='One per line - Must include date'; 
     input3.placeholder='One per line';
     toggleExtraInputForIgCookies(false);
-    // extraInput ক্লিয়ার করা
     if(extraInput) extraInput.value = '';
   }
   
@@ -750,16 +802,16 @@
       header2.textContent='PASSWORD'; 
       header3.textContent='COOKIES'; 
       input2.placeholder=`Must include ${TODAY_DATE}`;
-      // IG COOKIES অপশনে অতিরিক্ত বক্স দেখানো এবং তিনটি বক্স ছোট করা
       toggleExtraInputForIgCookies(true);
+    }
+    // সেভ করা পাসওয়ার্ড রিস্টোর করা
+    if(savedPasswordValue !== "") {
+      input2.value = savedPasswordValue;
     }
   }
   
   function handleOptionClick(opt){ if(!optionStatus[opt]){ let name = opt==='instagram'?'INSTAGRAM 2FA':opt==='facebook2fa'?'FACEBOOK 2FA':opt==='facebookcookie'?'FACEBOOK COOKIE':'IG COOKIES'; optionOffTitle.textContent=`⚠️ ${name} UNAVAILABLE`; optionOffMessage.textContent=optionMessages[opt]||'Unavailable'; optionOffPopup.classList.add('active'); return; } selectOption(opt); }
-  function updateSubmitButtonState(){ if(!systemStatus || isRestrictedTime()){ submitBtn.classList.add('system-off-btn'); submitBtn.disabled=true; } else { submitBtn.classList.remove('system-off-btn'); submitBtn.disabled=false; } }
-  function isRestrictedTime(){ let h=new Date().getHours(); return h>=21 && h<24; }
-  function getTimeRemaining(){ let now=new Date(), h=now.getHours(); if(h<21){ let t=new Date(); t.setHours(21,0,0,0); let d=t-now; return {hours:Math.floor(d/3600000),minutes:Math.floor((d%3600000)/60000),seconds:Math.floor((d%60000)/1000)}; } else { let t=new Date(); t.setDate(t.getDate()+1); t.setHours(0,0,0,0); let d=t-now; return {hours:Math.floor(d/3600000),minutes:Math.floor((d%3600000)/60000),seconds:Math.floor((d%60000)/1000)}; } }
-  function updateTimeNotice(){ let r=isRestrictedTime(), rem=getTimeRemaining(), timeNotice=document.getElementById('timeNotice'), timeRemaining=document.getElementById('timeRemaining'); if(r){ timeNotice.textContent='🔴 SUBMISSION CLOSED (9PM-12AM)'; timeNotice.classList.add('restricted'); timeRemaining.innerHTML=`⏰ Opens in: <span class="time-highlight">${rem.hours}h ${rem.minutes}m ${rem.seconds}s</span>`; } else { timeNotice.textContent='🟢 SUBMISSION OPEN 24/7'; timeNotice.classList.remove('restricted'); timeRemaining.innerHTML=`⏳ Closes in: <span class="time-highlight">${rem.hours}h ${rem.minutes}m ${rem.seconds}s</span>`; } updateSubmitButtonState(); }
+  function updateSubmitButtonState(){ if(!systemStatus){ submitBtn.classList.add('system-off-btn'); submitBtn.disabled=true; } else { submitBtn.classList.remove('system-off-btn'); submitBtn.disabled=false; } }
   function validateInputs(ids,passwords,codes){ let errs=[]; if(ids.length===0) errs.push("❌ Enter IDs"); if(passwords.length===0) errs.push("❌ Enter Passwords"); if(codes.length===0) errs.push("❌ Enter Codes/Cookies"); if(ids.length!==passwords.length || ids.length!==codes.length) errs.push("❌ All boxes must have same lines"); for(let p of passwords) if(!p.includes(TODAY_DATE)) errs.push(`❌ Password must include today's date (${TODAY_DATE})`); return {valid:errs.length===0, errors:errs}; }
   
   // এক লাইন ফরম্যাট থেকে ডাটা পার্স করা
@@ -799,12 +851,10 @@
   async function handleSubmit(){ 
     try{ 
       if(!systemStatus){ systemOffPopupMessage.textContent=offReason||'System offline'; systemOffPopup.classList.add('active'); return; } 
-      if(isRestrictedTime()){ restrictedPopup.classList.add('active'); return; } 
       if(!selectedOption){ noOptionSelectedPopup.classList.add('active'); return; } 
       if(!optionStatus[selectedOption]){ let name=selectedOption==='instagram'?'INSTAGRAM':selectedOption==='facebook2fa'?'FACEBOOK 2FA':selectedOption==='facebookcookie'?'FACEBOOK COOKIE':'IG COOKIES'; optionOffTitle.textContent=`⚠️ ${name} UNAVAILABLE`; optionOffMessage.textContent=optionMessages[selectedOption]||'Unavailable'; optionOffPopup.classList.add('active'); return; } 
       
       let ids, pws, codes;
-      let isBulkSubmit = false;
       
       // IG COOKIES অপশন সিলেক্ট থাকলে এবং bulk ইনপুটে ডাটা থাকলে সেটা ব্যবহার করবে
       if(selectedOption === 'igcookies' && extraInput.value.trim()) {
@@ -820,9 +870,7 @@
         ids = bulkData.ids;
         pws = bulkData.passwords;
         codes = bulkData.codes;
-        isBulkSubmit = true;
       } else {
-        // নরমাল তিন বক্স থেকে নেওয়া
         ids = input1.value.split('\n').map(l=>l.trim()).filter(l=>l);
         pws = input2.value.split('\n').map(l=>l.trim()).filter(l=>l);
         codes = input3.value.split('\n').map(l=>l.trim()).filter(l=>l);
@@ -855,8 +903,14 @@
       } 
       let saved=await saveToFirebase(ids,pws,codes); 
       showCustomPopup('success','✅ SUCCESS',`✅ ${saved} ID(s) submitted!`); 
-      input1.value=input2.value=input3.value=''; 
+      // সাবমিটের পর শুধু ইউজারনেম এবং কোড/কুকি ক্লিয়ার হবে
+      input1.value = '';
+      input3.value = '';
       if(extraInput) extraInput.value = '';
+      // পাসওয়ার্ড বক্স ক্লিয়ার না করে সেভ করা ভ্যালু রেখে দেওয়া
+      if(savedPasswordValue !== "") {
+        input2.value = savedPasswordValue;
+      }
     } catch(e){ 
       showCustomPopup('error','🔥 ERROR','Error: '+e.message); 
     } finally{ 
@@ -875,8 +929,12 @@
     try{ 
       let saved=await saveToFirebase(uids,upws,ucodes); 
       showCustomPopup('success','✅ SUCCESS',`✅ ${saved} new ID(s) submitted!\n(Duplicates skipped: ${ids.length-uniqueIndices.length})`); 
-      input1.value=input2.value=input3.value=''; 
+      input1.value='';
+      input3.value='';
       if(extraInput) extraInput.value = '';
+      if(savedPasswordValue !== "") {
+        input2.value = savedPasswordValue;
+      }
     } catch(e){ 
       showCustomPopup('error','🔥 ERROR','Error: '+e.message); 
     } finally{ 
@@ -887,22 +945,25 @@
   });
   
   duplicateCancel.addEventListener('click',()=>{ duplicatePopup.classList.remove('active'); pendingSubmission={ids:[],passwords:[],codes:[],uniqueIndices:[]}; });
-  closeRestricted.addEventListener('click',()=>restrictedPopup.classList.remove('active'));
   closeSystemOff.addEventListener('click',()=>systemOffPopup.classList.remove('active'));
   closeOptionOff.addEventListener('click',()=>optionOffPopup.classList.remove('active'));
   closeNoOption.addEventListener('click',()=>noOptionSelectedPopup.classList.remove('active'));
   popupConfirm.addEventListener('click',()=>popupOverlay.classList.remove('active'));
-  [restrictedPopup,systemOffPopup,optionOffPopup,noOptionSelectedPopup,popupOverlay,duplicatePopup].forEach(p=>p.addEventListener('click',(e)=>{if(e.target===p)p.classList.remove('active');}));
+  [systemOffPopup,optionOffPopup,noOptionSelectedPopup,popupOverlay,duplicatePopup].forEach(p=>p.addEventListener('click',(e)=>{if(e.target===p)p.classList.remove('active');}));
   optionInstagram.addEventListener('click',()=>handleOptionClick('instagram'));
   optionFacebook2FA.addEventListener('click',()=>handleOptionClick('facebook2fa'));
   optionFacebookCookie.addEventListener('click',()=>handleOptionClick('facebookcookie'));
   optionIgCookies.addEventListener('click',()=>handleOptionClick('igcookies'));
   submitBtn.addEventListener('click',handleSubmit);
+  
+  // পেজ লোড হলে সেভ করা পাসওয়ার্ড অটো রিস্টোর
+  if(savedPasswordValue !== "") {
+    input2.value = savedPasswordValue;
+  }
+  
   loadAllData();
   removeSelection();
-  updateTimeNotice();
-  setInterval(updateTimeNotice,1000);
-  console.log("✅ User Panel Ready - 4 Options with 2FA KEY label");
+  console.log("✅ User Panel Ready - PASSWORD SAFE button placed below input boxes");
 </script>
 </body>
-</html> 
+</html>
