@@ -420,7 +420,8 @@
     fb0fndcookie: { name: 'FB 0FND COOKIE', cols: ['UID', 'PASSWORD', 'COOKIE'], keys: ['uid', 'password', 'cookie'] },
     fbpc1000: { name: 'PC 1000×', cols: ['UID', 'PASSWORD', '2FA KEY'], keys: ['uid', 'password', 'code'] },
     fbhotmail0fnd: { name: 'FB Hotmail 0FND', cols: ['UID', 'PASSWORD', '2FA KEY', 'FULL HOTMAIL'], keys: ['uid', 'password', 'code', 'hotmail'] },
-    fbhotmail30: { name: 'FB Hotmail 30+', cols: ['UID', 'PASSWORD', '2FA KEY', 'COOKIES', 'FULL HOTMAIL'], keys: ['uid', 'password', 'code', 'cookie', 'hotmail'] },
+    // FB Hotmail 30+ - COOKIES বক্স সম্পূর্ণ রিমুভ করা হয়েছে
+    fbhotmail30: { name: 'FB Hotmail 30+', cols: ['UID', 'PASSWORD', '2FA KEY', 'FULL HOTMAIL'], keys: ['uid', 'password', 'code', 'hotmail'] },
     fbpc6155: { name: 'FB PC 61-55', cols: ['UID', 'PASSWORD', '2FA KEY'], keys: ['uid', 'password', 'code'] }
   };
 
@@ -706,5 +707,3 @@
 </script>
 </body>
 </html>
-
-ফেজবুক হট মেইল ৩০+ ফ্রেন্ড সাবমিট - 2FA দিলেই হবে / কুকিজ লাগবোনা -কুকিজ বক্স ফাকা রাখেন uid/pass/2fa/full hotmail
